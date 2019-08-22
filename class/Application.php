@@ -69,9 +69,33 @@ class Application extends Config {
      */
     public function actionFormSubmit($data) {
 
-        $errors = [];                                  //Отсутствие ошибок
+        if(empty($data[0]['value'])||strlen($data[0]['value'])>64){
+            $errors ['name']='Некорректно введено имя';
+        }
 
-        return ['result' => count($errors) === 0, 'error' => $errors];
+        $phone= str_replace([' ', '(', ')', '-'], '', $data[1]['value']);
+        if(empty($data[1]['value'])||!preg_match("/^\+380\d{3}\d{2}\d{2}\d{2}$/", $phone)){
+            $errors['phone']='Некорректно введен телефон';
+        }
+
+        if(!empty($data[2]['value'])){
+            if(!filter_var($data[2]['value'], FILTER_VALIDATE_EMAIL)){
+                $errors['email']='Некорректно введен email';
+                //echo "123";
+            }
+        }
+
+        if(!empty($data[3]['value'])){
+            if($data[3]['value']!=strip_tags($data[3]['value'])||strlen($data[3]['value'])>1024){
+                $errors['comment']='Неккоректно введен комментарий';
+            }
+        }
+
+        if(!empty($errors)){
+            return ['result' =>false, 'error' => $errors];
+        }
+            return ['result' =>true, 'error' => ''];
+
     }
 
 
