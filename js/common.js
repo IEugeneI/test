@@ -10,6 +10,7 @@ var Site = {
     },
     bind: function() {
         $(document).on('click', 'button.form-submit', function(e) {
+           if( !$('input[type="tel"]').inputmask('isComplete')){alert('Телефон введен не верно');return false;};
             e.preventDefault();
             Site.ajax.formSubmit($(this).prop('disabled', true).parents('form'));
         }).on('input', 'div.field .has-error', function() {
